@@ -1,0 +1,14 @@
+{
+  "url": "https://codeforces.com/problemset/problem/2101/A",
+  "title": "A. Mex in the Grid",
+  "problemStatement": "You are given\nn\n2\ncards with values from\n0\nto\nn\n2\n−1\n. You are to arrange them in a\nn\nby\nn\ngrid such that there is exactly one card in each cell.\\n\\nThe MEX (minimum excluded value) of a subgrid\n∗\nis defined as the smallest non-negative integer that does not appear in the subgrid.\\n\\nYour task is to arrange the cards such that the sum of MEX values over all\n(\nn(n+1)\n2\n)\n2\nsubgrids is maximized.\\n\\n∗\nA subgrid of a\nn\nby\nn\ngrid is specified by four numbers\nl\n1\n,\nr\n1\n,\nl\n2\n,\nr\n2\nsatisfying\n1≤\nl\n1\n≤\nr\n1\n≤n\nand\n1≤\nl\n2\n≤\nr\n2\n≤n\n. The element in the\ni\n-th row and the\nj\n-th column of the grid is part of the subgrid if and only if\nl\n1\n≤i≤\nr\n1\nand\nl\n2\n≤j≤\nr\n2\n.\\n\\nIn the first test case, one valid arrangement is:\\n\\nThere are\n9\nsubgrids in total, and the\n4\nof them with non-zero MEX are shown below:\\n\\nThe sum of MEX over all subgrids would be\n1+2+1+4=8\n. It can be proven that no other arrangements have a larger sum of MEX values.",
+  "samples": [
+    {
+      "input": "2\n2\n3",
+      "output": "0 1 \n2 3 \n8 4 5 \n6 0 1 \n7 2 3"
+    }
+  ],
+  "timeLimit": "time limit per test2 seconds",
+  "memoryLimit": "memory limit per test256 megabytes",
+  "success": true
+}
