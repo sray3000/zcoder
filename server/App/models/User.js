@@ -1,11 +1,19 @@
 let mongoose = require("mongoose");
 let bcrypt = require("bcryptjs");
+// Add at the top
+const { v4: uuidv4 } = require("uuid");
 
 let Schema = mongoose.Schema;
 
 let submissionSchema = new Schema({
+  submissionId: {
+    type: String,
+    required: true,
+    default: uuidv4
+  },
   problemId: { type: mongoose.Schema.Types.ObjectId, ref: "Question" },
   solutionCode: String,
+  language: String,
   status: { type: String, enum: ["Accepted", "Wrong Answer"] },
   timestamp: { type: Date, default: Date.now }
 }, { _id: false });

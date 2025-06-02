@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const { v4: uuidv4 } = require("uuid");
 
 // Load models
 const User = require('../../models/User');
@@ -40,7 +41,7 @@ router.get('/:userId/solutions', async (req, res) => {
       .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
       .slice(0, 20)
       .map(sub => ({
-        id: sub._id,
+        id: sub.submissionId,
         cfId: sub.problemId.contestId + sub.problemId.problemIndex,
         problemTitle: sub.problemId.title,
         submittedAt: sub.timestamp
@@ -119,6 +120,7 @@ router.post('/:userId/submit', async (req, res) => {
     if (!user) return res.status(404).json({ error: 'User not found' });
 
     user.submissions.push({
+      submissionId: uuidv4(),
       problemId,
       solutionCode,
       status: isCorrect ? 'Accepted' : 'Wrong Answer',

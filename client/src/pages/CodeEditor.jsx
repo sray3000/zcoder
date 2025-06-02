@@ -38,53 +38,17 @@ function CodeEditor() {
   const [output, setOutput] = useState('');
   const [status, setStatus] = useState('');
 
-  const [contestId, problemIndex] = id.match(/^(\d+)([A-Z]\d*)$/).slice(1);
+  const isContestFormat = /^(\d+)([A-Z]\d*)$/.test(id);
+  let contestId = null;
+  let problemIndex = null;
+
+  if (isContestFormat) {
+    const match = id.match(/^(\d+)([A-Z]\d*)$/);
+    contestId = match[1];
+    problemIndex = match[2];
+  }
+
   console.log('Parsed:', contestId, problemIndex);
-
-  // const [scrapedDescription, setScrapedDescription] = useState('');
-
-//   useEffect(() => {
-//     axios.get('http://localhost:5000/api/questions')
-//       .then(res => {
-//         const match = res.data.find(p => p.cfId === id);
-//         console.log('Loaded problem:', match); // ✅ Add this
-//         setProblem(match);
-//       })
-//       .catch(err => console.error(err));
-//   }, [id]);
-
-// useEffect(() => {
-//   if (!problem || !problem.contestId || !problem.problemIndex) return;
-
-//   // Assuming problem.contestID and problem.index are available
-//   axios
-//     .get(`http://localhost:5000/api/scrapeProblemDescription/${problem.contestID}/${problem.problemIndex}`)
-//     .then(res => {
-//       console.log('Scraped description:', res.data.description);
-//       setScrapedDescription(res.data.description);
-//     })
-//     .catch(err => {
-//       console.error('Failed to fetch scraped description', err);
-//       setScrapedDescription('<p>Unable to load problem description</p>');
-//     });
-// }, [problem]);
-
-  // useEffect(() => {
-  //   axios.get('http://localhost:5000/api/questions')
-  //     .then(res => {
-  //       const match = res.data.find(p => p.cfId === id);
-  //       console.log('Matched problem:', match);
-  //       if (match) {
-  //         setProblem(match);
-  //         axios.get(`/api/scrapeProblemDescription/${contestId}/${problemIndex}`)
-  //           .then(descRes => {
-  //             setProblem(prev => ({ ...prev, description: descRes.data.description }));
-  //           }).catch(descErr => console.error("Error fetching scraped description:", descErr));
-  //         console.log("Scraped description:", res.data.description);
-  //       }
-  //     })
-  //     .catch(err => console.error("Error fetching question list:", err));
-  // }, [id]);
 
   async function handleLogout() {
     try {
@@ -95,19 +59,61 @@ function CodeEditor() {
     }
   }
 
+  // useEffect(() => {
+  //   const fetchProblemData = async () => {
+  //     try {
+  //       const res = await axios.get(`http://localhost:5000/api/questions/${contestId}/${problemIndex}`);
+  //       console.log("Loaded problem:", res);
+  //       setProblem(res.data);
+  //     } catch (err) {
+  //       console.error('Error fetching problem details:', err);
+  //       setProblem({ title: 'Error', description: 'Could not load problem.', sampleInput: '', sampleOutput: '' });
+  //     }
+  //   };
+
+  //   fetchProblemData();
+  // }, [id]);
+
   useEffect(() => {
-    const fetchProblemData = async () => {
-      try {
-        const res = await axios.get(`http://localhost:5000/api/questions/${contestId}/${problemIndex}`);
-        console.log("Loaded problem:", res);
-        setProblem(res.data);
-      } catch (err) {
-        console.error('Error fetching problem details:', err);
-        setProblem({ title: 'Error', description: 'Could not load problem.', sampleInput: '', sampleOutput: '' });
+    const fetch = async () => {
+      const user = JSON.parse(localStorage.getItem("user")) || currentUser;
+      console.log(1);
+
+      // Case 1: submissionId route
+      if (!contestId || !problemIndex) {
+        try {
+          const res = await axios.get(`http://localhost:5000/api/solutions/${id}?userId=${user.id}`);
+          const submission = res.data;
+          console.log(submission);
+
+          // Load problem from DB
+          const problemId = submission.problemId;
+          console.log(problemId);
+          const problemRes = await axios.get(`http://localhost:5000/api/questions/${problemId}`);
+          setProblem(problemRes.data);
+
+          setCode(submission.solutionCode);
+          setLanguage(submission.language || 'cpp');
+          setStatus(submission.status);
+        } catch (err) {
+          console.error('Failed to load submission:', err);
+          setProblem({ title: 'Error', description: 'Submission not found.', sampleInput: '', sampleOutput: '' });
+        }
+      }
+      // Case 2: normal editor route with contestId + problemIndex
+      else {
+        try {
+          const res = await axios.get(`http://localhost:5000/api/questions/${contestId}/${problemIndex}`);
+          setProblem(res.data);
+          setCode('// Write your solution here\n');
+        } catch (err) {
+          console.error('Error fetching problem details:', err);
+          setProblem({ title: 'Error', description: 'Could not load problem.', sampleInput: '', sampleOutput: '' });
+        }
       }
     };
 
-    fetchProblemData();
+    fetch();
   }, [id]);
 
   useEffect(() => {
@@ -232,78 +238,6 @@ function CodeEditor() {
   };
 
   if (!problem) return <div>Loading...</div>;
-
-//   return (
-//     <div className="code-editor-page">
-//       <Navbar />
-//       <div className="editor-container">
-//         <div className="problem-panel" style={{ width: `${problemPanelWidth}%` }}>
-//           <h1 className="problem-title">{problem.title}</h1>
-//           <div className="problem-description" dangerouslySetInnerHTML={{ __html: scrapedDescription || problem.description || 'No description available' }}>
-//             {/* <h3>Description</h3>
-//             <pre>{problem.description || 'No description available'}</pre>
-//             <h3>Tags</h3>
-//             <pre>{problem.tags.join(', ')}</pre>
-//             <h4>Sample Input</h4>
-//             <pre>{problem.sampleInput || 'N/A'}</pre>
-//             <h4>Sample Output</h4>
-//             <pre>{problem.sampleOutput || 'N/A'}</pre> */}
-          
-//           </div>
-//         </div>
-
-//         {/* Divider for resizing */}
-//         <div
-//           className="resizer"
-//           ref={resizeRef}
-//           onMouseDown={() => setIsResizing(true)}
-//         />
-
-//         <div className="editor-panel">
-//           <div className="editor-controls">
-//             <select value={language} onChange={handleLanguageChange} className="language-select">
-//               {Object.entries(languageOptions).map(([key, opt]) => (
-//                 <option key={key} value={key}>{opt.label}</option>
-//               ))}
-//             </select>
-//             <button onClick={handleSubmit} className="btn btn-primary">Run Code</button>
-//           </div>
-
-//           <Editor
-//             height="50vh"
-//             language={language}
-//             value={code}
-//             onChange={setCode}
-//             theme="vs-dark"
-//             onMount={handleEditorDidMount}
-//             options={{
-//               minimap: { enabled: false },
-//               fontSize: 14,
-//               lineNumbers: 'on',
-//               automaticLayout: true,
-//               scrollBeyondLastLine: false,
-//             }}
-//           />
-
-//           {status && (
-//             <div className={`submission-status ${status.toLowerCase().replace(' ', '-')}`}>
-//               {status}
-//             </div>
-//           )}
-
-//           {output && (
-//             <div className="output-panel">
-//               <h3>Output:</h3>
-//               <pre>{output}</pre>
-//             </div>
-//           )}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default CodeEditor;
 
   return (
     <div className="dashboard">

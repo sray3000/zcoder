@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const Question = require('../../models/Question');
 const auth = require('../../middleware/auth');
 const { createQuestion } = require('../../controllers/questionController');
@@ -15,7 +16,7 @@ router.get('/', async (req, res) => {
 router.get('/fetch/codeforces', async (req, res) => {
   try {
     const response = await axios.get('https://codeforces.com/api/problemset.problems');
-    const problems = response.data.result.problems.slice(50, 100);
+    const problems = response.data.result.problems.slice(50, 60);
 
     const insertedQuestions = [];
 
@@ -73,6 +74,44 @@ router.get('/:contestId/:problemIndex', async (req, res) => {
     res.json(question);
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// // GET /api/questions/id/:problemId
+// router.get('/id/:problemId', async (req, res) => {
+//   try {
+//     const problem = await Question.findById(req.params.problemId);
+//     if (!problem) return res.status(404).json({ message: 'Problem not found' });
+//     res.json(problem);
+//   } catch (err) {
+//     res.status(500).json({ message: 'Error fetching problem by ID' });
+//   }
+// });
+
+router.get('/:problemId', async (req, res) => {
+  console.log(1);
+  const { problemId } = req.params;
+  console.log('🔍 Incoming request for problemId:', problemId);
+
+  if (!mongoose.Types.ObjectId.isValid(problemId)) {
+    console.warn('❌ Invalid ObjectId format');
+    return res.status(400).json({ message: 'Invalid problem ID format' });
+  }
+
+  try {
+    console.log('Looking up problem with ID:', req.params.problemId);
+    const problem = await Question.findOne({_id: problemId});
+    console.log('Found:', problem);  // Is this null? or an object?
+    if (!problem) {
+      console.warn('⚠️ Problem not found in DB');
+      return res.status(404).json({ message: 'Problem not found' });
+    }
+
+    console.log('✅ Problem found:', problem.title);
+    res.json(problem);
+  } catch (err) {
+    console.error('🔥 Error in route:', err);
+    res.status(500).json({ message: 'Error fetching problem by ID', error: err.message });
   }
 });
 

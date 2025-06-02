@@ -84,7 +84,7 @@ function Dashboard() {
               <h2><Code2 className="section-icon" /> Recent Solutions</h2>
               <div className="solutions-list">
                 {userStats.solutions.slice(0, 5).map(solution => (
-                  <Link key={solution.id} to={`/editor/${solution.contestId}${solution.problemIndex}`} className="solution-item">
+                  <Link key={solution.id} to={`/editor/${solution.id}`} className="solution-item">
                     <span className="solution-title">{solution.problemTitle}</span>
                     <span className="solution-date">{new Date(solution.submittedAt).toLocaleDateString()}</span>
                   </Link>
