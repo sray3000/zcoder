@@ -22,6 +22,6 @@ mongoose.connect(process.env.DB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }).then(() => {
-  console.log("Connected to MongoDB");
+  console.log("Connected to MongoDB Atlas!!");
   app.listen(process.env.PORT || 5000, () => console.log("Server running..."));
 }).catch(err => console.error(err));
