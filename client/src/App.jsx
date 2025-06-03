@@ -36,6 +36,7 @@ function AppRoutes() {
       <Route path="/signup" element={!currentUser ? <Signup /> : <Navigate to="/dashboard" />} />
       <Route path="/dashboard" element={currentUser ? <Dashboard /> : <Navigate to="/login" />} />
       <Route path="/problems" element={<ProblemSet />} />
+      <Route path="/editor/" element={<CodeEditor />} />
       <Route path="/editor/:id" element={<CodeEditor />} />
     </Routes>
   );

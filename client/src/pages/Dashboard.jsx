@@ -81,12 +81,25 @@ function Dashboard() {
 
           <div className="dashboard-grid">
             <div className="dashboard-section">
-              <h2><Code2 className="section-icon" /> Recent Solutions</h2>
+              <h2><Code2 className="section-icon" /> Recent Submissions</h2>
               <div className="solutions-list">
                 {userStats.solutions.slice(0, 5).map(solution => (
-                  <Link key={solution.id} to={`/editor/${solution.id}`} className="solution-item">
+                  <Link
+                    key={solution.id || solution.submissionId}
+                    to={`/editor/${solution.id || solution.submissionId}`}
+                    className="solution-item"
+                    style={{
+                      borderLeft: `5px solid ${getStatusColor(solution.status)}`
+                    }}
+                  >
                     <span className="solution-title">{solution.problemTitle}</span>
-                    <span className="solution-date">{new Date(solution.submittedAt).toLocaleDateString()}</span>
+                    <span className="solution-date">{new Date(solution.submittedAt || solution.timestamp).toLocaleDateString()}</span>
+                    <span
+                      className="solution-status"
+                      style={{ color: getStatusColor(solution.status), fontWeight: 'bold' }}
+                    >
+                      {solution.status || 'Unknown'}
+                    </span>
                   </Link>
                 ))}
               </div>
@@ -160,6 +173,19 @@ function getActivityColor(submissions) {
   if (submissions < 6) return '#40c463';
   if (submissions < 9) return '#30a14e';
   return '#216e39';
+}
+
+function getStatusColor(status) {
+  if (!status || typeof status !== 'string') return '#607D8B'; // fallback color
+
+  switch (status.toLowerCase()) {
+    case 'accepted':
+      return '#4CAF50'; // green
+    case 'wrong answer':
+      return '#F44336'; // red
+    default:
+      return '#607D8B'; // default gray-blue
+  }
 }
 
 export default Dashboard;

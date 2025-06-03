@@ -44,7 +44,8 @@ router.get('/:userId/solutions', async (req, res) => {
         id: sub.submissionId,
         cfId: sub.problemId.contestId + sub.problemId.problemIndex,
         problemTitle: sub.problemId.title,
-        submittedAt: sub.timestamp
+        submittedAt: sub.timestamp,
+        status: sub.status
       }));
 
     res.json(recent);
