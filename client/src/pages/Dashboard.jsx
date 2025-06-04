@@ -143,7 +143,7 @@ function Dashboard() {
           <div className="stats-section">
             <div className="stats-grid">
               <div className="stat-card">
-                <h3>Problems Solved</h3>
+                <h3>Correct Submissions</h3>
                 <p className="stat-number">{userStats.problemsSolved}</p>
               </div>
               <div className="stat-card">

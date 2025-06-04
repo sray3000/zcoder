@@ -5,6 +5,7 @@ import { Bookmark } from 'lucide-react';
 import axios from 'axios';
 import '../styles/global.css';
 import '../styles/dashboard.css';
+const baseURL = import.meta.env.VITE_BACKEND_URL; // For Vite
 
 function ProblemSet() {
   const { currentUser, logout } = useAuth();
