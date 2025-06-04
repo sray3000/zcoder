@@ -2,7 +2,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import axios from 'axios';
-const baseURL = import.meta.env.VITE_API_BASE_URL; // For Vite
+const baseURL = import.meta.env.VITE_BACKEND_URL; // For Vite
 
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);

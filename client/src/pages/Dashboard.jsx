@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Calendar, BookMarked, Code2, Trophy } from 'lucide-react';
 import axios from 'axios';
 import '../styles/dashboard.css';
-const baseURL = import.meta.env.VITE_API_BASE_URL; // For Vite
+const baseURL = import.meta.env.VITE_BACKEND_URL; // For Vite
 
 function Dashboard() {
   const { currentUser, logout } = useAuth();

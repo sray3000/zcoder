@@ -5,7 +5,7 @@ import Editor from '@monaco-editor/react';
 import axios from 'axios';
 import '../styles/global.css';
 import '../styles/dashboard.css';
-const baseURL = import.meta.env.VITE_API_BASE_URL; // For Vite
+const baseURL = import.meta.env.VITE_BACKEND_URL; // For Vite
 
 const languageOptions = {
   c: { id: 103, label: 'C' },
