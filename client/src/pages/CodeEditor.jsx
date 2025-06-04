@@ -5,6 +5,7 @@ import Editor from '@monaco-editor/react';
 import axios from 'axios';
 import '../styles/global.css';
 import '../styles/dashboard.css';
+const baseURL = import.meta.env.VITE_API_BASE_URL; // For Vite
 
 const languageOptions = {
   c: { id: 103, label: 'C' },
@@ -63,14 +64,14 @@ function CodeEditor() {
       // Case 1: submissionId route
       if (!contestId || !problemIndex) {
         try {
-          const res = await axios.get(`http://localhost:5000/api/solutions/${id}?userId=${user.id}`);
+          const res = await axios.get(`${baseURL}/api/solutions/${id}?userId=${user.id}`);
           const submission = res.data;
           console.log(submission);
 
           // Load problem from DB
           const problemId = submission.problemId;
           console.log(problemId);
-          const problemRes = await axios.get(`http://localhost:5000/api/questions/${problemId}`);
+          const problemRes = await axios.get(`${baseURL}/api/questions/${problemId}`);
           setProblem(problemRes.data);
 
           setCode(submission.solutionCode);
@@ -84,7 +85,7 @@ function CodeEditor() {
       // Case 2: normal editor route with contestId + problemIndex
       else {
         try {
-          const res = await axios.get(`http://localhost:5000/api/questions/${contestId}/${problemIndex}`);
+          const res = await axios.get(`${baseURL}/api/questions/${contestId}/${problemIndex}`);
           setProblem(res.data);
           setCode('// Write your solution here\n');
         } catch (err) {
@@ -167,7 +168,7 @@ function CodeEditor() {
         setOutput(outputText || 'No output');
 
         // ✅ Save the submission
-        await axios.post(`http://localhost:5000/api/users/${currentUser.id}/submit`, {
+        await axios.post(`${baseURL}/api/users/${currentUser.id}/submit`, {
           problemId: problem._id,
           solutionCode: code,
           isCorrect

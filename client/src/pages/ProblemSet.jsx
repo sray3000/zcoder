@@ -16,8 +16,8 @@ function ProblemSet() {
 
   useEffect(() => {
     Promise.all([
-      axios.get('http://localhost:5000/api/questions'),
-      currentUser ? axios.get(`http://localhost:5000/api/users/${currentUser.id}/bookmarks`) : Promise.resolve({ data: [] })
+      axios.get(`${baseURL}/api/questions`),
+      currentUser ? axios.get(`${baseURL}/api/users/${currentUser.id}/bookmarks`) : Promise.resolve({ data: [] })
     ]).then(([problemsRes, bookmarksRes]) => {
       console.log('problemsRes:', problemsRes.data);
 
@@ -50,29 +50,6 @@ function ProblemSet() {
     }
   }
 
-  // const handleBookmark = async (problemId, problemKey) => {
-  //   if (!currentUser) {
-  //     navigate('/login');
-  //     return;
-  //   }
-
-  //   try {
-  //     if (bookmarkedProblems.has(problemKey)) {
-  //       await axios.delete(`http://localhost:5000/api/users/${currentUser.id}/bookmarks/${problemKey}`);
-  //       setBookmarkedProblems(prev => {
-  //         const next = new Set(prev);
-  //         next.delete(problemKey);
-  //         return next;
-  //       });
-  //     } else {
-  //       await axios.post(`http://localhost:5000/api/users/${currentUser.id}/bookmarks`, { problemId });
-  //       setBookmarkedProblems(prev => new Set([...prev, problemKey]));
-  //     }
-  //   } catch (error) {
-  //     console.error('Error updating bookmark:', error);
-  //   }
-  // };
-
   const handleBookmark = async (problemId, problemKey) => {
     if (!currentUser) {
       navigate('/login');
@@ -80,7 +57,7 @@ function ProblemSet() {
     }
 
     try {
-      const res = await axios.post(`http://localhost:5000/api/users/${currentUser.id}/bookmarks`, {
+      const res = await axios.post(`${baseURL}/api/users/${currentUser.id}/bookmarks`, {
         problemId,
       });
 

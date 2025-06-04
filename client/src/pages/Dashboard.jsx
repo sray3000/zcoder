@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Calendar, BookMarked, Code2, Trophy } from 'lucide-react';
 import axios from 'axios';
 import '../styles/dashboard.css';
+const baseURL = import.meta.env.VITE_API_BASE_URL; // For Vite
 
 function Dashboard() {
   const { currentUser, logout } = useAuth();
@@ -23,10 +24,10 @@ function Dashboard() {
       // Fetch user statistics and data
       console.log(currentUser);
       Promise.all([
-        axios.get(`http://localhost:5000/api/users/${currentUser.id}/stats`),
-        axios.get(`http://localhost:5000/api/users/${currentUser.id}/bookmarks`),
-        axios.get(`http://localhost:5000/api/users/${currentUser.id}/solutions`),
-        axios.get(`http://localhost:5000/api/users/${currentUser.id}/activity`)
+        axios.get(`${baseURL}/api/users/${currentUser.id}/stats`),
+        axios.get(`${baseURL}/api/users/${currentUser.id}/bookmarks`),
+        axios.get(`${baseURL}/api/users/${currentUser.id}/solutions`),
+        axios.get(`${baseURL}/api/users/${currentUser.id}/activity`)
       ]).then(([stats, bookmarks, solutions, activity]) => {
         setUserStats({
           problemsSolved: stats.data.solved,

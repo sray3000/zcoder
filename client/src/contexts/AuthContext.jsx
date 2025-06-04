@@ -2,6 +2,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import axios from 'axios';
+const baseURL = import.meta.env.VITE_API_BASE_URL; // For Vite
 
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
@@ -25,14 +26,14 @@ export default function AuthContextProvider({ children }) {
 
 
   const login = async (username, password) => {
-    const res = await axios.post('http://localhost:5000/api/auth/login', { username, password });
+    const res = await axios.post(`${baseURL}/api/auth/login`, { username, password });
     localStorage.setItem('token', res.data.token);
     localStorage.setItem('user', JSON.stringify(res.data.user));
     setCurrentUser(res.data.user);
   };
 
   const signup = async (email, password, username) => {
-    const res = await axios.post('http://localhost:5000/api/auth/signup', { email, password, username });
+    const res = await axios.post(`${baseURL}/api/auth/signup`, { email, password, username });
     localStorage.setItem('token', res.data.token);
     localStorage.setItem('user', JSON.stringify(res.data.user));
     setCurrentUser(res.data.user);
@@ -50,7 +51,7 @@ export default function AuthContextProvider({ children }) {
     const result = await signInWithPopup(auth, provider);
     const idToken = await result.user.getIdToken();
 
-    const res = await axios.post('http://localhost:5000/api/auth/google', { idToken });
+    const res = await axios.post(`${baseURL}/api/auth/google`, { idToken });
     localStorage.setItem('token', res.data.token);
     localStorage.setItem('user', JSON.stringify(res.data.user));
     setCurrentUser(res.data.user);
