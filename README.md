@@ -17,3 +17,5 @@ Thanks to these wonderful people:
 <!-- prettier-ignore-end -->
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
+Deployed at: https://keen-snickerdoodle-bc83a7.netlify.app
+
