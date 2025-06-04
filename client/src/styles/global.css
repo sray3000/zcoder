@@ -192,12 +192,19 @@ p {
   padding-top: 80px;
 }
 
-.editor-container {
+/* .editor-container {
   display: grid;
   grid-template-columns: 400px 1fr;
   gap: var(--space-4);
   padding: var(--space-4);
   height: calc(100vh - 80px);
+} */
+
+.editor-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
 }
 
 .problem-panel {
@@ -408,4 +415,16 @@ p {
   margin-bottom: 10px;
   font-size: 14px;
   white-space: pre-wrap;
+}
+
+.output-box {
+  background: #111;
+  color: #0f0;
+  padding: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  border-radius: 8px;
+  border: 1px solid #333;
 }

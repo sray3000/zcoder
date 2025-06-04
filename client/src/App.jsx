@@ -9,6 +9,7 @@ import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import ProblemSet from './pages/ProblemSet';
 import CodeEditor from './pages/CodeEditor';
+import CodeEditor2 from './pages/CodeEditor2';
 import AuthContextProvider from './contexts/AuthContext';
 import './styles/reset.css';
 import './styles/global.css';
@@ -36,7 +37,7 @@ function AppRoutes() {
       <Route path="/signup" element={!currentUser ? <Signup /> : <Navigate to="/dashboard" />} />
       <Route path="/dashboard" element={currentUser ? <Dashboard /> : <Navigate to="/login" />} />
       <Route path="/problems" element={<ProblemSet />} />
-      <Route path="/editor/" element={<CodeEditor />} />
+      <Route path="/editor/" element={<CodeEditor2 />} />
       <Route path="/editor/:id" element={<CodeEditor />} />
     </Routes>
   );

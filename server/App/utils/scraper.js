@@ -133,7 +133,7 @@ class CodeforcesSeleniumScraper {
             }
             
             if (descriptionParts.length > 0) {
-                return descriptionParts.join('\\n\\n');
+                return this.cleanText(descriptionParts.join('\n\n'));
             }
             
             // Fallback 1: Look for divs with substantial content
@@ -186,7 +186,7 @@ class CodeforcesSeleniumScraper {
                 }
             }
             
-            return descriptionLines.join('\\n').trim();
+            return this.cleanText(descriptionLines.join('\n'));
             
         } catch (error) {
             return '';
@@ -275,6 +275,17 @@ class CodeforcesSeleniumScraper {
 
     sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    cleanText(text) {
+    return text
+        .replace(/\r\n/g, '\n')         // Normalize newlines
+        .replace(/\\n/g, '\n')          // Convert escaped newlines
+        .replace(/\n{3,}/g, '\n\n')     // Reduce too many blank lines
+        .replace(/[ \t]+/g, ' ')        // Collapse multiple spaces/tabs
+        .replace(/ +\n/g, '\n')         // Trim space before newline
+        .replace(/\n +/g, '\n')         // Trim space after newline
+        .trim();
     }
 }
 

@@ -50,23 +50,49 @@ function ProblemSet() {
     }
   }
 
-  const handleBookmark = async (problemId) => {
+  // const handleBookmark = async (problemId, problemKey) => {
+  //   if (!currentUser) {
+  //     navigate('/login');
+  //     return;
+  //   }
+
+  //   try {
+  //     if (bookmarkedProblems.has(problemKey)) {
+  //       await axios.delete(`http://localhost:5000/api/users/${currentUser.id}/bookmarks/${problemKey}`);
+  //       setBookmarkedProblems(prev => {
+  //         const next = new Set(prev);
+  //         next.delete(problemKey);
+  //         return next;
+  //       });
+  //     } else {
+  //       await axios.post(`http://localhost:5000/api/users/${currentUser.id}/bookmarks`, { problemId });
+  //       setBookmarkedProblems(prev => new Set([...prev, problemKey]));
+  //     }
+  //   } catch (error) {
+  //     console.error('Error updating bookmark:', error);
+  //   }
+  // };
+
+  const handleBookmark = async (problemId, problemKey) => {
     if (!currentUser) {
       navigate('/login');
       return;
     }
 
     try {
-      if (bookmarkedProblems.has(problemId)) {
-        await axios.delete(`http://localhost:5000/api/users/${currentUser.id}/bookmarks/${problemId}`);
+      const res = await axios.post(`http://localhost:5000/api/users/${currentUser.id}/bookmarks`, {
+        problemId,
+      });
+
+      // Toggle locally based on backend response
+      if (res.data.bookmarked) {
+        setBookmarkedProblems(prev => new Set([...prev, problemKey]));
+      } else {
         setBookmarkedProblems(prev => {
           const next = new Set(prev);
-          next.delete(problemId);
+          next.delete(problemKey);
           return next;
         });
-      } else {
-        await axios.post(`http://localhost:5000/api/users/${currentUser.id}/bookmarks`, { problemId });
-        setBookmarkedProblems(prev => new Set([...prev, problemId]));
       }
     } catch (error) {
       console.error('Error updating bookmark:', error);
@@ -91,7 +117,10 @@ function ProblemSet() {
               <button onClick={handleLogout} className="btn btn-outline">Logout</button>
             </div>
           </div>
-          <button className="btn btn-outline" onClick={() => window.location.href = '/dashboard'}>Go to Dashboard</button>
+          <div className='left_portion'>
+            <button className="btn btn-outline" onClick={() => window.location.href = '/dashboard'}>Go to Dashboard</button>
+            <button className="btn btn-outline" onClick={() => window.location.href = '/editor'}>Go to Code Editor</button>
+          </div>
         </div>
       </header>
       <br></br>
@@ -148,7 +177,7 @@ function ProblemSet() {
                 className={`bookmark-button ${bookmarkedProblems.has(problemKey) ? 'bookmarked' : ''}`}
                 onClick={(e) => {
                   e.preventDefault();
-                  handleBookmark(problemId);
+                  handleBookmark(problemId, problemKey);
                 }}
               >
                 <Bookmark className="bookmark-icon" />

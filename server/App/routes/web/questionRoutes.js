@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
 router.get('/fetch/codeforces', async (req, res) => {
   try {
     const response = await axios.get('https://codeforces.com/api/problemset.problems');
-    const problems = response.data.result.problems.slice(50, 60);
+    const problems = response.data.result.problems.slice(50, 70);
 
     const insertedQuestions = [];
 

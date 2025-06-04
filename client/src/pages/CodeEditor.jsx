@@ -27,10 +27,6 @@ function CodeEditor() {
   const [problemPanelWidth, setProblemPanelWidth] = useState(40); // percentage
   const [isProblemPanelCollapsed, setIsProblemPanelCollapsed] = useState(false);
 
-  const handleEditorDidMount = (editor) => {
-    editorRef.current = editor;
-  };
-
   const { id } = useParams();
   const [problem, setProblem] = useState(null);
   const [language, setLanguage] = useState('cpp');
@@ -58,21 +54,6 @@ function CodeEditor() {
       console.error('Failed to log out', error);
     }
   }
-
-  // useEffect(() => {
-  //   const fetchProblemData = async () => {
-  //     try {
-  //       const res = await axios.get(`http://localhost:5000/api/questions/${contestId}/${problemIndex}`);
-  //       console.log("Loaded problem:", res);
-  //       setProblem(res.data);
-  //     } catch (err) {
-  //       console.error('Error fetching problem details:', err);
-  //       setProblem({ title: 'Error', description: 'Could not load problem.', sampleInput: '', sampleOutput: '' });
-  //     }
-  //   };
-
-  //   fetchProblemData();
-  // }, [id]);
 
   useEffect(() => {
     const fetch = async () => {
@@ -115,43 +96,6 @@ function CodeEditor() {
 
     fetch();
   }, [id]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (editorRef.current) {
-        editorRef.current.layout();
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // if (!problem) return <div>Loading...</div>;
-
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      if (!isResizing) return;
-      
-      const containerWidth = document.querySelector('.editor-container').offsetWidth;
-      const newWidth = (e.clientX / containerWidth) * 100;
-      setProblemPanelWidth(Math.min(Math.max(newWidth, 20), 80));
-    };
-
-    const handleMouseUp = () => {
-      setIsResizing(false);
-    };
-
-    if (isResizing) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-    }
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [isResizing]);
 
   const handleLanguageChange = (event) => {
     setLanguage(event.target.value);
@@ -300,7 +244,7 @@ function CodeEditor() {
           </div>
         </div>
 
-        <div className="editor-panel" style={{ flex: 1 }}>
+        <div className="editor-panel" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
           <div className="editor-controls" style={{ display: 'flex', gap: '12px', marginBottom: '10px' }}>
             <select value={language} onChange={handleLanguageChange}>
               {Object.entries(languageOptions).map(([key, opt]) => (
@@ -318,12 +262,30 @@ function CodeEditor() {
             onChange={setCode}
           />
 
-          <div className="output-panel">
+          <div className="output-panel" style={{
+            padding: '1rem',
+            maxHeight: 'calc(100vh - 300px)',
+            overflowY: 'auto',
+            backgroundColor: '#fff',
+            borderRadius: '8px',
+            border: '1px solid #ccc'
+          }}>
             <h3>Status: {status}</h3>
             {output && (
               <>
                 <h3>Output:</h3>
-                <pre>{output}</pre>
+                <pre style={{
+                  background: '#111',
+                  color: '#0f0',
+                  padding: '10px',
+                  borderRadius: '6px',
+                  overflowX: 'auto',
+                  whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-word',
+                  margin: 0,
+                }}>
+                  {output}
+                </pre>
               </>
             )}
           </div>

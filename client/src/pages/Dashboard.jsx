@@ -61,7 +61,10 @@ function Dashboard() {
               <button onClick={handleLogout} className="btn btn-outline">Logout</button>
             </div>
           </div>
-          <button className="btn btn-outline" onClick={() => window.location.href = '/problems'}>Go to Problemset</button>
+          <div className='left_portion'>
+            <button className="btn btn-outline" onClick={() => window.location.href = '/problems'}>Go to Problemset</button>
+            <button className="btn btn-outline" onClick={() => window.location.href = '/editor'}>Go to Code Editor</button>
+          </div>
         </div>
       </header>
       
